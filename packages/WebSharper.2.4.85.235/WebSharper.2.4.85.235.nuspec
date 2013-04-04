@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>WebSharper</id>
+    <version>2.4.85.235</version>
+    <title>WebSharper</title>
+    <authors>IntelliFactory</authors>
+    <owners>IntelliFactory</owners>
+    <licenseUrl>http://websharper.com/licensing</licenseUrl>
+    <projectUrl>http://websharper.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>WebSharper framework including the F# to JavaScript compiler</description>
+    <releaseNotes />
+    <copyright>Copyright 2012 IntelliFactory</copyright>
+    <language />
+    <tags>Web JavaScript F#</tags>
+    <references />
+  </metadata>
+</package>
