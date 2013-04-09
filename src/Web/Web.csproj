@@ -40,6 +40,12 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="*.aspx" />
+    <Content Include="Content\bootstrap-responsive.css" />
+    <Content Include="Content\bootstrap-responsive.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\images\glyphicons-halflings-white.png" />
+    <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Scripts\bootstrap-alert.js" />
     <Content Include="Scripts\bootstrap-button.js" />
     <Content Include="Scripts\bootstrap-carousel.js" />
@@ -52,6 +58,8 @@
     <Content Include="Scripts\bootstrap-tooltip.js" />
     <Content Include="Scripts\bootstrap-transition.js" />
     <Content Include="Scripts\bootstrap-typeahead.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\IntelliFactory.WebSharper.Collections.dll.js" />
     <Content Include="Scripts\IntelliFactory.WebSharper.Collections.dll.min.js" />
     <Content Include="Scripts\IntelliFactory.WebSharper.Control.dll.js" />
@@ -117,6 +125,9 @@
     <Content Include="Content\bootstrap\less\utilities.less" />
     <Content Include="Content\bootstrap\less\variables.less" />
     <Content Include="Content\bootstrap\less\wells.less" />
+    <None Include="Scripts\jquery-1.9.1.intellisense.js" />
+    <Content Include="Scripts\jquery-1.9.1.js" />
+    <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Themes\**\*.*" />
     <Content Include="Views\**\*.*" />
     <Content Include="*.asax" />
@@ -147,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Content Include="Scripts\jquery-1.9.1.min.map" />
     <None Include="WebSharper.targets" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />

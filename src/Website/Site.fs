@@ -3,13 +3,9 @@
 open IntelliFactory.Html
 open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Sitelets
-
-type Action =
-    | PolicyView
-    | PolicyListView
+open Actions
 
 module Site =
-
     let ConstructPage title body =
         PageContent <| fun context ->
             {
@@ -19,11 +15,17 @@ module Site =
                         [ H3 [Text <| body ]]
             }
 
-    let PolicyViewPage
-        = ConstructPage "Policy view" "Policy data"
+    let PolicyViewPage = 
+        Layout.WithTemplate "Policy view" <| fun ctx ->
+            [
+                Div [Text "Policy data"]
+            ]
 
-    let PolicyListViewPage
-        = ConstructPage "Policy list view" "Policy list"
+    let PolicyListViewPage =
+        Layout.WithTemplate "Policy list view" <| fun ctx ->
+            [
+                Div [Text "Policy list"]
+            ]
 
     let Main =
         Sitelet.Sum [

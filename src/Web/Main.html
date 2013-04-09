@@ -2,13 +2,22 @@
 <html>
   <head>
     <title>${title}</title>
-    <meta name="generator" content="websharper" data-replace="scripts" />
+      <meta name="generator" content="websharper" data-replace="scripts" />
+      <link rel="stylesheet" href="Content/bootstrap.css"/>
   </head>
     <body>
-        lalala
-        <h1>${title}</h1>
-        <div data-hole="body">
-            BODY
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span2">
+                    <nav>
+                        <h3>Menu</h3>
+                        <ul data-hole="menu"></ul>
+                    </nav>
+                </div>
+                <div class="span10" data-hole="body">
+                    <!--Body content-->
+                </div>
+            </div>
         </div>
     </body>
 </html>
