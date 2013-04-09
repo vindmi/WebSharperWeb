@@ -35,6 +35,7 @@
     <Compile Include="Site.fs" />
     <None Include="WebSharper.targets" />
     <None Include="packages.config" />
+    <Compile Include="Layout.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

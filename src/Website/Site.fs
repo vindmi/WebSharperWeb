@@ -5,73 +5,58 @@ open IntelliFactory.WebSharper
 open IntelliFactory.WebSharper.Sitelets
 
 type Action =
-    | Home
-    | About
-
-module Skin =
-    open System.Web
-
-    let TemplateLoadFrequency =
-        #if DEBUG
-        Content.Template.PerRequest
-        #else
-        Content.Template.Once
-        #endif
-
-    type Page =
-        {
-            Title : string
-            Body : list<Content.HtmlElement>
-        }
-
-    let MainTemplate =
-        let path = HttpContext.Current.Server.MapPath("~/Main.html")
-        Content.Template<Page>(path, TemplateLoadFrequency)
-            .With("title", fun x -> x.Title)
-            .With("body", fun x -> x.Body)
-
-    let WithTemplate title body : Content<Action> =
-        Content.WithTemplate MainTemplate <| fun context ->
-            {
-                Title = title
-                Body = body context
-            }
+    | PolicyView
+    | PolicyListView
 
 module Site =
 
-    let ( => ) text url =
-        A [HRef url] -< [Text text]
+    let ConstructPage title body =
+        PageContent <| fun context ->
+            {
+                Page.Default with
+                    Title = Some title
+                    Body =
+                        [ H3 [Text <| body ]]
+            }
 
-    let Links (ctx: Context<Action>) =
-        UL [
-            LI ["Home" => ctx.Link Home]
-            LI ["About" => ctx.Link About]
-        ]
+    let PolicyViewPage
+        = ConstructPage "Policy view" "Policy data"
 
-    let HomePage =
-        Skin.WithTemplate "HomePage" <| fun ctx ->
-            [
-                Div [Text "HOME"]
-                Links ctx
-            ]
-
-    let AboutPage =
-        Skin.WithTemplate "AboutPage" <| fun ctx ->
-            [
-                Div [Text "ABOUT"]
-                Links ctx
-            ]
+    let PolicyListViewPage
+        = ConstructPage "Policy list view" "Policy list"
 
     let Main =
         Sitelet.Sum [
-            Sitelet.Content "/" Home HomePage
-            Sitelet.Content "/About" About AboutPage
+            Sitelet.Content "/" PolicyView PolicyViewPage
+            Sitelet.Content "/List" PolicyListView PolicyListViewPage
         ]
 
 type Website() =
     interface IWebsite<Action> with
         member this.Sitelet = Site.Main
-        member this.Actions = [Home; About]
+        member this.Actions = [PolicyView; PolicyListView]
 
 [<assembly: WebsiteAttribute(typeof<Website>)>]
 do ()
+
+//    let ( => ) text url =
+//        A [HRef url] -< [Text text]
+
+//    let Links (ctx: Context<Action>) =
+//        UL [
+//            LI ["Home" => ctx.Link PolicyView]
+//            LI ["About" => ctx.Link PolicyListView]
+//        ]
+//    let HomePage =
+//        Skin.WithTemplate "HomePage" <| fun ctx ->
+//            [
+//                Div [Text "HOME"]
+//                Links ctx
+//            ]
+//
+//    let AboutPage =
+//        Skin.WithTemplate "AboutPage" <| fun ctx ->
+//            [
+//                Div [Text "ABOUT"]
+//                Links ctx
+//            ]
