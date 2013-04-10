@@ -8,23 +8,40 @@
     type Page =
         {
             Title : string
-            Body : list<Content.HtmlElement>
-        }
+            Body : Content.HtmlElement list
+            Menu : Content.HtmlElement list
+        } 
 
-    let MainTemplate =
+    let menu currentAction ctx : Content.HtmlElement list =
+        let getMenuItemClass action currentAction =
+            match action with
+                | currentAction -> "active"
+                | _ -> ""
+
+        let createMenuItem (text, action) =
+            LI [Class <| getMenuItemClass action currentAction] -< 
+                [A [HRef (ctx.Link action)] -< [Text text]]
+
+        let items =
+            [
+                ("Policy view", PolicyView)
+                ("Policy list", PolicyListView)
+            ]
+            |> List.map(fun item -> createMenuItem item)
+
+        [UL [Class "nav nav-list"] -< items]
+
+    let WithTemplate title action body : Content<Action> =
         let path = HttpContext.Current.Server.MapPath("~/Main.html")
-        Content.Template<Page>(path)
-            .With("title", fun x -> x.Title)
-            .With("body", fun x -> x.Body)
-            .With("menu", fun x -> 
-                [
-                    LI [Text "Policy view"]
-                    LI [Text "Policy list"]
-                ])
+        let initTemplate =
+            Content.Template<Page>(path)
+                .With("title", fun x -> x.Title)
+                .With("body", fun x -> x.Body)
+                .With("menu", fun x -> x.Menu)
 
-    let WithTemplate title body : Content<Action> =
-        Content.WithTemplate MainTemplate <| fun context ->
+        Content.WithTemplate initTemplate <| fun context ->
             {
                 Title = title
                 Body = body context
+                Menu = menu action context
             }
