@@ -13,21 +13,17 @@
         } 
 
     let menu currentAction ctx : Content.HtmlElement list =
-        let getMenuItemClass action currentAction =
-            match action with
-                | currentAction -> "active"
-                | _ -> ""
-
-        let createMenuItem (text, action) =
-            LI [Class <| getMenuItemClass action currentAction] -< 
-                [A [HRef (ctx.Link action)] -< [Text text]]
-
+        let createMenuItem = fun (text, action) ->     
+            let cssClass = if action = currentAction then "active" else ""
+            LI [Class cssClass] 
+                -< [A [HRef (ctx.Link action)] 
+                    -< [Text text]]
+        
         let items =
             [
                 ("Policy view", PolicyView)
                 ("Policy list", PolicyListView)
-            ]
-            |> List.map(fun item -> createMenuItem item)
+            ] |> List.map(fun item -> createMenuItem item)
 
         [UL [Class "nav nav-list"] -< items]
 
