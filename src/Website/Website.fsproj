@@ -32,12 +32,13 @@
   <Import Project="WebSharper.targets" Condition="Exists('WebSharper.targets')" />
   <Import Project="$(WEBSHARPER_HOME)/IntelliFactory.WebSharper.Sitelets.targets" />
   <ItemGroup>
-    <Compile Include="Model.fs" />
+    <Compile Include="DataModel.fs" />
     <Compile Include="DatabaseContext.fs" />
-    <Compile Include="Global.fs" />
     <Compile Include="Users.fs" />
+    <Compile Include="Global.fs" />
     <Compile Include="Actions.fs" />
     <Compile Include="Layout.fs" />
+    <Compile Include="Forms.fs" />
     <Compile Include="Site.fs" />
     <None Include="WebSharper.targets" />
     <None Include="packages.config" />

@@ -47,28 +47,8 @@
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\main.css" />
-    <Content Include="Scripts\bootstrap-alert.js" />
-    <Content Include="Scripts\bootstrap-button.js" />
-    <Content Include="Scripts\bootstrap-carousel.js" />
-    <Content Include="Scripts\bootstrap-collapse.js" />
-    <Content Include="Scripts\bootstrap-dropdown.js" />
-    <Content Include="Scripts\bootstrap-modal.js" />
-    <Content Include="Scripts\bootstrap-popover.js" />
-    <Content Include="Scripts\bootstrap-scrollspy.js" />
-    <Content Include="Scripts\bootstrap-tab.js" />
-    <Content Include="Scripts\bootstrap-tooltip.js" />
-    <Content Include="Scripts\bootstrap-transition.js" />
-    <Content Include="Scripts\bootstrap-typeahead.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\IntelliFactory.WebSharper.Collections.dll.js" />
-    <Content Include="Scripts\IntelliFactory.WebSharper.Collections.dll.min.js" />
-    <Content Include="Scripts\IntelliFactory.WebSharper.Control.dll.js" />
-    <Content Include="Scripts\IntelliFactory.WebSharper.Control.dll.min.js" />
-    <Content Include="Scripts\IntelliFactory.WebSharper.dll.js" />
-    <Content Include="Scripts\IntelliFactory.WebSharper.dll.min.js" />
-    <Content Include="Scripts\IntelliFactory.WebSharper.Html.dll.js" />
-    <Content Include="Scripts\IntelliFactory.WebSharper.Html.dll.min.js" />
     <Content Include="Content\bootstrap\ico\apple-touch-icon-114-precomposed.png" />
     <Content Include="Content\bootstrap\ico\apple-touch-icon-144-precomposed.png" />
     <Content Include="Content\bootstrap\ico\apple-touch-icon-57-precomposed.png" />
@@ -136,12 +116,21 @@
     <Content Include="*.html" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="FSharp.Core">
       <Private>true</Private>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
@@ -161,13 +150,15 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="Scripts\jquery-1.9.1.min.map" />
-    <None Include="WebSharper.targets" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Website\Website.fsproj">
       <Project>{652956b7-1bd9-4137-9433-d167bf307aca}</Project>
       <Name>Website</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

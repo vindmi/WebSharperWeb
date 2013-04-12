@@ -3,5 +3,6 @@
 type Action =
     | PolicyView
     | PolicyListView
-
+    | Login
+    | Logout
 
