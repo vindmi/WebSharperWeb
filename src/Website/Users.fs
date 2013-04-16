@@ -1,6 +1,8 @@
 ﻿module Users
 open WebMatrix.WebData
 open DataModel
+open System.Collections.Generic
+open System.Linq
 
     type userData = { 
         login : string 
@@ -16,6 +18,9 @@ open DataModel
 
     let logout =
         WebSecurity.Logout()
+        let cookie = new System.Web.HttpCookie(System.Web.Security.FormsAuthentication.FormsCookieName, "")
+        cookie.Expires <- System.DateTime.Now.AddYears(-10)
+        System.Web.HttpContext.Current.Response.SetCookie(cookie)
 
     let createUser data =
         let usr = new User(Login = data.login, FirstName = data.firstName, LastName = data.lastName)

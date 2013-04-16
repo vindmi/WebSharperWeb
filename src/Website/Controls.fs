@@ -6,11 +6,11 @@ open IntelliFactory.WebSharper.Html
 open IntelliFactory.WebSharper.Sitelets
 open IntelliFactory.WebSharper.Web
 
-module Forms =
+module Controls =
 
     type LoginInfo =
         {
-            Login : string
+            Name : string
             Password : string
         }
 
@@ -39,13 +39,13 @@ module Forms =
                 elem, ignore, state.Publish
         Formlet.Replace loadingPane f
     
-    [<Inline "window.location = $url">]
+    [<Inline "window.location.assign($url)">]
     let Redirect (url: string) = ()
 
     [<Rpc>]
     let Login (loginInfo: LoginInfo) =
-        System.Threading.Thread.Sleep 1000
-        Users.login loginInfo.Login loginInfo.Password None |> async.Return
+        Users.login loginInfo.Name loginInfo.Password None
+        |> async.Return
 
     [<JavaScript>]
     let LoginForm (redirectUrl: string) : Formlet<unit> =
@@ -60,7 +60,7 @@ module Forms =
             |> Enhance.WithValidationIcon
             |> Enhance.WithTextLabel "Password"
         let loginF =
-            Formlet.Yield (fun n pw -> {Login = n; Password = pw})
+            Formlet.Yield (fun n pw -> {Name=n; Password=pw})
             <*> uName <*> pw
 
         Formlet.Do {
@@ -70,12 +70,12 @@ module Forms =
                     {Enhance.FormButtonConfiguration.Default with Label = Some "Login"}
                     {Enhance.FormButtonConfiguration.Default with Label = Some "Reset"}
             return!
-                WithLoadingPane (Login uInfo) <| fun loggedIn ->
+                WithLoadingPane (Login uInfo) (fun loggedIn ->
                     if loggedIn then
                         Redirect redirectUrl
                         Formlet.Return ()
                     else
-                        WarningPanel "Login failed"
+                        WarningPanel "Login failed")
         }
         |> Enhance.WithFormContainer
 
@@ -85,4 +85,4 @@ type LoginControl(redirectUrl: string) =
 
     new () = new LoginControl("?")
     [<JavaScript>]
-    override this.Body = Forms.LoginForm redirectUrl :> _
+    override this.Body = Controls.LoginForm redirectUrl :> _

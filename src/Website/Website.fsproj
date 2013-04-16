@@ -37,8 +37,8 @@
     <Compile Include="Users.fs" />
     <Compile Include="Global.fs" />
     <Compile Include="Actions.fs" />
+    <Compile Include="Controls.fs" />
     <Compile Include="Layout.fs" />
-    <Compile Include="Forms.fs" />
     <Compile Include="Site.fs" />
     <None Include="WebSharper.targets" />
     <None Include="packages.config" />

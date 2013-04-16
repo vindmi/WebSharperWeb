@@ -47,73 +47,20 @@
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\main.css" />
+    <None Include="Properties\PublishProfiles\WebSharperWebPublishProfile.pubxml" />
+    <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Content\bootstrap\ico\apple-touch-icon-114-precomposed.png" />
-    <Content Include="Content\bootstrap\ico\apple-touch-icon-144-precomposed.png" />
-    <Content Include="Content\bootstrap\ico\apple-touch-icon-57-precomposed.png" />
-    <Content Include="Content\bootstrap\ico\apple-touch-icon-72-precomposed.png" />
-    <Content Include="Content\bootstrap\ico\favicon.ico" />
-    <Content Include="Content\bootstrap\ico\favicon.png" />
-    <Content Include="Content\bootstrap\img\glyphicons-halflings-white.png" />
-    <Content Include="Content\bootstrap\img\glyphicons-halflings.png" />
-    <Content Include="Content\bootstrap\less\accordion.less" />
-    <Content Include="Content\bootstrap\less\alerts.less" />
-    <Content Include="Content\bootstrap\less\bootstrap.less" />
-    <Content Include="Content\bootstrap\less\breadcrumbs.less" />
-    <Content Include="Content\bootstrap\less\button-groups.less" />
-    <Content Include="Content\bootstrap\less\buttons.less" />
-    <Content Include="Content\bootstrap\less\carousel.less" />
-    <Content Include="Content\bootstrap\less\close.less" />
-    <Content Include="Content\bootstrap\less\code.less" />
-    <Content Include="Content\bootstrap\less\component-animations.less" />
-    <Content Include="Content\bootstrap\less\dropdowns.less" />
-    <Content Include="Content\bootstrap\less\forms.less" />
-    <Content Include="Content\bootstrap\less\grid.less" />
-    <Content Include="Content\bootstrap\less\hero-unit.less" />
-    <Content Include="Content\bootstrap\less\labels-badges.less" />
-    <Content Include="Content\bootstrap\less\layouts.less" />
-    <Content Include="Content\bootstrap\less\media.less" />
-    <Content Include="Content\bootstrap\less\mixins.less" />
-    <Content Include="Content\bootstrap\less\modals.less" />
-    <Content Include="Content\bootstrap\less\navbar.less" />
-    <Content Include="Content\bootstrap\less\navs.less" />
-    <Content Include="Content\bootstrap\less\pager.less" />
-    <Content Include="Content\bootstrap\less\pagination.less" />
-    <Content Include="Content\bootstrap\less\popovers.less" />
-    <Content Include="Content\bootstrap\less\progress-bars.less" />
-    <Content Include="Content\bootstrap\less\reset.less" />
-    <Content Include="Content\bootstrap\less\responsive-1200px-min.less" />
-    <Content Include="Content\bootstrap\less\responsive-767px-max.less" />
-    <Content Include="Content\bootstrap\less\responsive-768px-979px.less" />
-    <Content Include="Content\bootstrap\less\responsive-navbar.less" />
-    <Content Include="Content\bootstrap\less\responsive-utilities.less" />
-    <Content Include="Content\bootstrap\less\responsive.less" />
-    <Content Include="Content\bootstrap\less\scaffolding.less" />
-    <Content Include="Content\bootstrap\less\sprites.less" />
-    <Content Include="Content\bootstrap\less\tables.less" />
-    <Content Include="Content\bootstrap\less\tests\buttons.html" />
-    <Content Include="Content\bootstrap\less\tests\css-tests.css" />
-    <Content Include="Content\bootstrap\less\tests\css-tests.html" />
-    <Content Include="Content\bootstrap\less\tests\forms-responsive.html" />
-    <Content Include="Content\bootstrap\less\tests\forms.html" />
-    <Content Include="Content\bootstrap\less\tests\navbar-fixed-top.html" />
-    <Content Include="Content\bootstrap\less\tests\navbar-static-top.html" />
-    <Content Include="Content\bootstrap\less\tests\navbar.html" />
-    <Content Include="Content\bootstrap\less\thumbnails.less" />
-    <Content Include="Content\bootstrap\less\tooltip.less" />
-    <Content Include="Content\bootstrap\less\type.less" />
-    <Content Include="Content\bootstrap\less\utilities.less" />
-    <Content Include="Content\bootstrap\less\variables.less" />
-    <Content Include="Content\bootstrap\less\wells.less" />
-    <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Themes\**\*.*" />
     <Content Include="Views\**\*.*" />
     <Content Include="*.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="*.html" />
+    <Content Include="Scripts\jquery-1.9.1.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -149,7 +96,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="Scripts\jquery-1.9.1.min.map" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Website\Website.fsproj">
@@ -159,6 +105,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\bootstrap\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

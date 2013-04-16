@@ -6,11 +6,15 @@ open IntelliFactory.WebSharper.Sitelets
 open Actions
 
 module Site =
+    let private RandomizeUrl url =
+        url + "?d=" +
+            System.Uri.EscapeUriString (System.DateTime.Now.ToString())
+
     let PolicyViewPage = 
         Layout.WithTemplate "Policy view" PolicyView <| fun ctx ->
             [
                 Div [Text "Policy data"]
-                A [HRef <| ctx.Link Logout] -< [Text "logout"]
+                A [HRef <| RandomizeUrl (ctx.Link Logout)] -< [Text "logout"]
             ]
 
     let PolicyListViewPage =
@@ -20,46 +24,52 @@ module Site =
                 A [HRef <| ctx.Link Logout] -< [Text "logout"]
             ]
 
-    let LoginPage : Content<Action> =
+    let LoginPage (redirectAction:Option<Action>) : Content<Action> =
+        let redirectLink =
+            match redirectAction with
+            | Some action -> action
+            | None        -> Action.PolicyView
+
         PageContent <| fun context -> 
         {
             Page.Default with
                 Title = Some "Welcome"
-                Body = [ Div [Text "login" ] ] //[ Div [ new LoginControl("/") ] ]
+                Body = [ Div [ new LoginControl(redirectLink |> context.Link) ] ]
         }
 
     let Application =
         let authorized sitelet =    
             let filter : Sitelet.Filter<Action> = {
-                VerifyUser = fun _ -> true//System.Web.HttpContext.Current.User.Identity.IsAuthenticated
-                LoginRedirect = fun _ -> Login
+                VerifyUser = fun _ -> true
+                LoginRedirect = Some >> Login
             }
             Sitelet.Protect filter <| sitelet
 
         let salesPages =
             Sitelet.Sum [
                 Sitelet.Content "/" PolicyView PolicyViewPage
-                Sitelet.Content "list" PolicyListView PolicyListViewPage
-            ] |> authorized
+                Sitelet.Content "/list" PolicyListView PolicyListViewPage
+            ] 
+            |> authorized
 
-        let logoutAction =
+        let loginPages =
             Sitelet.Infer <| fun action ->
                 match action with
                 | Action.Logout ->
-                    // Logout user and redirect to home
-                    Users.logout
-                    Content.Redirect Login
+                    WebMatrix.WebData.WebSecurity.Logout()
+                    Content.Redirect PolicyView
+                | Login action ->
+                    LoginPage action
                 | _ -> Content.NotFound
         [
             salesPages
-            Sitelet.Content "/login" Login LoginPage
-            logoutAction
+            loginPages
         ] |> Sitelet.Sum
 
 type Website() =
     interface IWebsite<Action> with
         member this.Sitelet = Site.Application
-        member this.Actions = [PolicyView; PolicyListView; Login; Logout]
+        member this.Actions = []
 
 [<assembly: WebsiteAttribute(typeof<Website>)>]
 do ()
