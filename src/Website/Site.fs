@@ -6,7 +6,6 @@ open IntelliFactory.WebSharper.Sitelets
 open Actions
 
 module Site =
-
     let NewPolicyPage = 
         Layout.WithTemplate "New policy" NewPolicy <| fun ctx ->
             [Text "Policy data"]

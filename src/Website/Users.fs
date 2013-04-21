@@ -1,39 +1,52 @@
-﻿module Users
-open WebMatrix.WebData
-open DataModel
-open System.Collections.Generic
-open System.Linq
+﻿namespace Website
 
-    type userData = { 
-        login : string 
-        password: string
-        firstName: string 
-        lastName: string 
-    }
+module Users =
+    open WebMatrix.WebData
+    open System.Collections.Generic
+    open System.Linq
+    open Website.DataModel
 
-    let IsAuthenticated() =
-        WebSecurity.IsAuthenticated
+        type LoginData = {
+            Name : string
+            Password : string
+        }
+        type UserData = { 
+            login : LoginData
+            firstName: string 
+            lastName: string
+            birthDate : System.DateTime
+            idCode: string
+        }
 
-    let Login userName password persistCookie =
-        match persistCookie with
-            | Some b -> WebSecurity.Login(userName, password, b)
-            | None -> WebSecurity.Login(userName, password)
+        let IsAuthenticated() =
+            WebSecurity.IsAuthenticated
 
-    let Logout() =
-        WebSecurity.Logout()
+        let Login userName password persistCookie =
+            match persistCookie with
+                | Some b -> WebSecurity.Login(userName, password, b)
+                | None -> WebSecurity.Login(userName, password)
 
-    let private createUser data =
-        let usr = new User(Login = data.login, FirstName = data.firstName, LastName = data.lastName)
-        use db = new Website.DatabaseContext()
-        db.Users.Add(usr) |> ignore
-        db.SaveChanges() 
-            |> fun rows -> if rows = 1 then Some(usr) else None
+        let Logout() =
+            WebSecurity.Logout()
 
-    let private createUserAccount userName pwd =
-        WebSecurity.CreateAccount(userName, pwd)
+        let private createUser data =
+            let usr = 
+                new Client(
+                    Login = data.login.Name, 
+                    FirstName = data.firstName, 
+                    LastName = data.lastName,
+                    Code = data.idCode,
+                    BirthDate = data.birthDate)
+            use db = new DatabaseContext()
+            db.Client.Add(usr) |> ignore
+            db.SaveChanges() 
+                |> fun rows -> if rows = 1 then Some(usr) else None
+
+        let private createUserAccount userName pwd =
+            WebSecurity.CreateAccount(userName, pwd)
         
-    let Register (data : userData) =
-        let usr = createUser data
-        if usr.IsSome
-            then createUserAccount usr.Value.Login data.password
-            else ""
+        let Register (data : UserData) =
+            let usr = createUser data
+            if usr.IsSome
+                then createUserAccount usr.Value.Login data.login.Password
+                else ""

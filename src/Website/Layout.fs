@@ -1,4 +1,6 @@
-﻿module Layout
+﻿namespace Website
+
+module Layout =
     open IntelliFactory.Html
     open IntelliFactory.WebSharper
     open IntelliFactory.WebSharper.Sitelets
