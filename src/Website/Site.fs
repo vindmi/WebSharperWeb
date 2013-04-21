@@ -6,36 +6,29 @@ open IntelliFactory.WebSharper.Sitelets
 open Actions
 
 module Site =
-    let private RandomizeUrl url =
-        url + "?d=" +
-            System.Uri.EscapeUriString (System.DateTime.Now.ToString())
 
-    let PolicyViewPage = 
-        Layout.WithTemplate "Policy view" PolicyView <| fun ctx ->
-            [
-                Div [Text "Policy data"]
-                A [HRef <| RandomizeUrl (ctx.Link Logout)] -< [Text "logout"]
-            ]
+    let NewPolicyPage = 
+        Layout.WithTemplate "New policy" NewPolicy <| fun ctx ->
+            [Text "Policy data"]
 
-    let PolicyListViewPage =
-        Layout.WithTemplate "Policy list view" PolicyListView <| fun ctx ->
-            [
-                Div [Text "Policy list"]
-                A [HRef <| ctx.Link Logout] -< [Text "logout"]
-            ]
+    let PolicyListPage =
+        Layout.WithTemplate "Policy list" PolicyList <| fun ctx ->
+            [Text "Policy list"]
+
+    let HomePage =
+        Layout.WithTemplate "Home" Home <| fun ctx ->
+            [Text "Home"]
 
     let LoginPage (redirectAction:Option<Action>) : Content<Action> =
         let redirectLink =
             match redirectAction with
             | Some action -> action
-            | None        -> Action.PolicyView
+            | None        -> Action.Home
 
-        PageContent <| fun context -> 
-        {
-            Page.Default with
-                Title = Some "Welcome"
-                Body = [ Div [ new LoginControl(redirectLink |> context.Link) ] ]
-        }
+        Layout.WithTemplate "Login" (Login None) <| fun context -> 
+            [ 
+                Div [ new LoginControl(redirectLink |> Layout.LinkTo context) ] 
+            ]   
 
     let Application =
         let authorized sitelet =    
@@ -45,24 +38,31 @@ module Site =
             }
             Sitelet.Protect filter <| sitelet
 
-        let salesPages =
-            Sitelet.Sum [
-                Sitelet.Content "/" PolicyView PolicyViewPage
-                Sitelet.Content "/list" PolicyListView PolicyListViewPage
+        let contentPages =
+            [
+                ("/", Home, HomePage)
+                ("/new", NewPolicy, NewPolicyPage)
+                ("/list", PolicyList, PolicyListPage)
             ] 
-            |> authorized
+            |> List.map (
+                fun (path, action, handler) ->
+                    let content = Sitelet.Content path action handler
+                    if IsProtected action
+                        then content |> authorized
+                        else content)
+            |> Sitelet.Sum
 
         let loginPages =
             Sitelet.Infer <| fun action ->
                 match action with
                 | Action.Logout ->
-                    WebMatrix.WebData.WebSecurity.Logout()
-                    Content.Redirect PolicyView
+                    Users.Logout()
+                    Content.Redirect Home
                 | Login action ->
                     LoginPage action
                 | _ -> Content.NotFound
         [
-            salesPages
+            contentPages
             loginPages
         ] |> Sitelet.Sum
 

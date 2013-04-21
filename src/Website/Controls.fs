@@ -44,7 +44,7 @@ module Controls =
 
     [<Rpc>]
     let Login (loginInfo: LoginInfo) =
-        Users.login loginInfo.Name loginInfo.Password None
+        Users.Login loginInfo.Name loginInfo.Password None
         |> async.Return
 
     [<JavaScript>]
