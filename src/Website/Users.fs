@@ -10,8 +10,9 @@ module Users =
             Name : string
             Password : string
         }
-        type UserData = { 
-            login : LoginData
+        type ClientData = { 
+            Name : string
+            Password : string
             firstName: string 
             lastName: string
             birthDate : System.DateTime
@@ -32,7 +33,7 @@ module Users =
         let private createUser data =
             let usr = 
                 new Client(
-                    Login = data.login.Name, 
+                    Login = data.Name, 
                     FirstName = data.firstName, 
                     LastName = data.lastName,
                     Code = data.idCode,
@@ -45,8 +46,13 @@ module Users =
         let private createUserAccount userName pwd =
             WebSecurity.CreateAccount(userName, pwd)
         
-        let Register (data : UserData) =
+        let Register (data : ClientData) =
             let usr = createUser data
             if usr.IsSome
-                then createUserAccount usr.Value.Login data.login.Password
-                else ""
+                then createUserAccount usr.Value.Login data.Password |> fun _ -> true
+                else false
+
+        let Authenticate userName =
+            if WebSecurity.UserExists userName then
+                System.Web.Security.FormsAuthentication.SetAuthCookie(userName, false)
+            else ()

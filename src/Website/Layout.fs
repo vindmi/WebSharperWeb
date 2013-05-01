@@ -41,12 +41,10 @@ module Layout =
         [UL [Class "nav nav-tabs"] -< items]
 
     let authLink ctx : Content.HtmlElement list =
-        let link = 
-            match Users.IsAuthenticated() with 
-                | true -> (Logout, "logout") 
-                | _ -> (Login None, "login")
-
-        [A [HRef <| LinkTo ctx (fst link)] -< [Text (snd link)]]
+        match Users.IsAuthenticated() with
+            | true -> [(Logout, "logout")]
+            | _ -> [(Login None, "login"); (Register, "register")]
+        |> List.map(fun link -> A [HRef <| LinkTo ctx (fst link)] -< [Text (snd link)])
 
     let WithTemplate title action body : Content<Action> =
         let path = HttpContext.Current.Server.MapPath("~/Main.html")

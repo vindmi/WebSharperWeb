@@ -27,6 +27,12 @@ module Site =
         Layout.WithTemplate "Login" (Login None) <| fun context -> 
             [ 
                 Div [ new LoginControl(redirectLink |> Layout.LinkTo context) ] 
+            ]
+
+    let RegisterPage  =
+        Layout.WithTemplate "Register" Register <| fun context -> 
+            [ 
+                Div [ new RegisterControl() ]
             ]   
 
     let Application =
@@ -59,6 +65,8 @@ module Site =
                     Content.Redirect Home
                 | Login action ->
                     LoginPage action
+                | Action.Register ->
+                    RegisterPage
                 | _ -> Content.NotFound
         [
             contentPages
