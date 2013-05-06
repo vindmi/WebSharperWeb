@@ -8,7 +8,9 @@ open Actions
 module Site =
     let NewPolicyPage = 
         Layout.WithTemplate "New policy" NewPolicy <| fun ctx ->
-            [Text "Policy data"]
+            [ 
+                Div [ new PolicyControl() ]
+            ]
 
     let PolicyListPage =
         Layout.WithTemplate "Policy list" PolicyList <| fun ctx ->

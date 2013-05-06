@@ -135,7 +135,59 @@ module Widgets =
             }
             |> Enhance.WithFormContainer
 
-/// Exposes the login form so that it can be used in sitelets.
+    module PolicyWidget =
+        type PolicyData = {
+            constructionType : int
+            constructionYear : string
+            area : string
+            objectType : int
+            isFireAlarm : int
+            isBurglaryAlarm : int
+        }
+
+        let private policyHolderSummary =
+            match Users.CurrentUser() with
+            | Some(c) -> c.LastName + " " + c.FirstName + ", " + c.Code
+            | _ -> ""
+
+        [<JavaScript>]
+        let Create : Formlet<unit> =
+            //let policyHolder = [ Span [ Text policyHolderSummary ] ]
+            let constructionType = Controls.Select 0 [ ("Stone / Brick", 0); ("Wood", 1) ] |> Enhance.WithTextLabel "Construction type"
+            let constructionYear =  input "Construction year" (Some "Enter construction year")
+            let area = input "Area (m2)" (Some "Enter area")
+            let objectType = Controls.Select 0 [ ("Flat", 0); ("House", 1); ("Garage", 2) ] |> Enhance.WithTextLabel "Object type"
+            let isFireAlarm = Controls.RadioButtonGroup None [ ("Yes", 0); ("No", 1) ] |> Enhance.WithTextLabel "Is there fire alarm?"
+            let isBurglaryAlarm = Controls.RadioButtonGroup None [ ("Yes", 0); ("No", 1) ] |> Enhance.WithTextLabel "Is there burglary alarm?"
+
+            let policyForm =
+                Formlet.Yield (fun constrType year area objType fire burgl -> 
+                {
+                    constructionType = constrType
+                    constructionYear = year
+                    area = area
+                    objectType = objType
+                    isFireAlarm = fire
+                    isBurglaryAlarm = burgl
+                })
+                <*> constructionType 
+                <*> constructionYear 
+                <*> area 
+                <*> objectType 
+                <*> isFireAlarm
+                <*> isBurglaryAlarm
+
+            Formlet.Do {
+                let! policyData = 
+                    policyForm |> Enhance.WithCustomSubmitButton
+                        { Enhance.FormButtonConfiguration.Default with Label = Some "Calculate" }
+                let calculateAndReturn =
+                    Formlet.Never()
+                return!
+                    calculateAndReturn
+            }
+            |> Enhance.WithFormContainer
+
 type LoginControl(redirectUrl: string) =
     inherit IntelliFactory.WebSharper.Web.Control()
 
@@ -148,3 +200,9 @@ type RegisterControl() =
 
     [<JavaScript>]
     override this.Body = Widgets.RegisterWidget.Create :> _
+
+type PolicyControl() =
+    inherit IntelliFactory.WebSharper.Web.Control()
+
+    [<JavaScript>]
+    override this.Body = Widgets.PolicyWidget.Create :> _

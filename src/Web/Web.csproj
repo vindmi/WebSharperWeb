@@ -61,6 +61,7 @@
     </Content>
     <Content Include="*.html" />
     <Content Include="Scripts\jquery-1.9.1.min.map" />
+    <Content Include="WebSharper.targets" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">

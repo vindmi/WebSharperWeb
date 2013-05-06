@@ -34,6 +34,7 @@
   <ItemGroup>
     <Compile Include="DataModel.fs" />
     <Compile Include="DatabaseContext.fs" />
+    <Compile Include="PremiumCalculation.fs" />
     <Compile Include="Users.fs" />
     <Compile Include="Global.fs" />
     <Compile Include="Actions.fs" />
