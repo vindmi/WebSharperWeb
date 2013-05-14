@@ -32,8 +32,8 @@ module Layout =
         let items =
             [
                 ("Home", Home)
-                ("Policy view", NewPolicy)
-                ("Policy list", PolicyList)
+                ("New policy", NewPolicy)
+                ("My policies", PolicyList)
             ]
             |> List.filter(fun (_, action) -> not (IsProtected action) || Users.IsAuthenticated())
             |> List.map(fun item -> createMenuItem item) 

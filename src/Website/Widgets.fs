@@ -107,7 +107,7 @@ module Widgets =
             let pw2 =  input "Confirm Password" (Some "Confirm Password")
             
             let registerF =
-                Formlet.Yield (fun fn ln id un pw -> 
+                Formlet.Yield (fun un pw fn ln id -> 
                 {
                     Name = un; 
                     Password = pw;
@@ -116,7 +116,11 @@ module Widgets =
                     idCode = id;
                     birthDate = System.DateTime.Now
                 })
-                <*> uName <*> pw <*> firstName <*> lastName <*> idCode
+                <*> uName 
+                <*> pw 
+                <*> firstName 
+                <*> lastName 
+                <*> idCode
 
             Formlet.Do {
                 let! uInfo = 
@@ -136,51 +140,93 @@ module Widgets =
             |> Enhance.WithFormContainer
 
     module PolicyWidget =
-        type PolicyData = {
-            constructionType : int
-            constructionYear : string
-            area : string
-            objectType : int
-            isFireAlarm : int
-            isBurglaryAlarm : int
-        }
+        open Premium
+        open Policies
+        open Actions
+
+        [<Rpc>]
+        let private CalculatePremium data =
+            Premium.Calculate data
+
+        [<Rpc>]
+        let private BuyPolicy draft price =
+            Policies.Issue draft (Users.CurrentUser().Value) price
 
         [<JavaScript>]
-        let Create : Formlet<unit> =
-            let constructionType = Controls.Select 0 [ ("Stone / Brick", 0); ("Wood", 1) ] |> Enhance.WithTextLabel "Construction type"
-            let constructionYear =  input "Construction year" (Some "Enter construction year")
-            let area = input "Area (m2)" (Some "Enter area")
-            let objectType = Controls.Select 0 [ ("Flat", 0); ("House", 1); ("Garage", 2) ] |> Enhance.WithTextLabel "Object type"
-            let isFireAlarm = Controls.RadioButtonGroup None [ ("Yes", 0); ("No", 1) ] |> Enhance.WithTextLabel "Is there fire alarm?"
-            let isBurglaryAlarm = Controls.RadioButtonGroup None [ ("Yes", 0); ("No", 1) ] |> Enhance.WithTextLabel "Is there burglary alarm?"
+        let Create (redirectUrl) : Formlet<unit> =
+            let constructionType = 
+                Controls.Select 0 [ ("Stone / Brick", 0); ("Wood", 1) ]
+                    |> Enhance.WithTextLabel "Construction type"
+            let constructionYear =  
+                input "Construction year" None//(Some "Enter construction year")
+                    |> Validator.IsInt "Enter number"
+                    |> Enhance.WithValidationIcon
+            let area = 
+                input "Area (m2)" None
+                    |> Validator.IsInt "Enter number"
+                    |> Enhance.WithValidationIcon
+            let objectType = 
+                Controls.Select 0 [ ("Flat", 0); ("House", 1); ("Garage", 2) ] 
+                    |> Enhance.WithTextLabel "Object type"
+            let isFireAlarm = 
+                Controls.RadioButtonGroup None [ ("Yes", true); ("No", false) ] 
+                    |> Enhance.WithTextLabel "Is there fire alarm?"
+            let isBurglaryAlarm = 
+                Controls.RadioButtonGroup None [ ("Yes", true); ("No", false) ] 
+                    |> Enhance.WithTextLabel "Is there burglary alarm?"
 
             let policyForm =
-                Formlet.Yield (fun constrType year area objType fire burgl -> 
-                {
-                    constructionType = constrType
-                    constructionYear = year
-                    area = area
+                Formlet.Yield (fun objType constrType year area fire burgl -> 
+                { 
                     objectType = objType
+                    constructionType = constrType
+                    constructionYear = int year
+                    area = int area
                     isFireAlarm = fire
                     isBurglaryAlarm = burgl
                 })
-                <*> constructionType 
+                <*> objectType
+                <*> constructionType
                 <*> constructionYear 
                 <*> area 
-                <*> objectType 
                 <*> isFireAlarm
                 <*> isBurglaryAlarm
+
+            let buyFormlet (draft:PolicyData) (price:int) : Formlet<unit> = 
+                Formlet.Do {
+                    let! prInp =
+                        Controls.ReadOnlyInput (price.ToString())
+                        |> Enhance.WithCustomSubmitButton
+                            { Enhance.FormButtonConfiguration.Default with Label = Some "Buy" }
+                        |> Enhance.WithFormContainer
+
+                    let ret =
+                        BuyPolicy draft price |> ignore
+                        redirect redirectUrl
+                        Formlet.Return()
+
+                    return! ret
+                }
+                |> Enhance.WithFormContainer
 
             Formlet.Do {
                 let! policyData = 
                     policyForm |> Enhance.WithCustomSubmitButton
-                        { Enhance.FormButtonConfiguration.Default with Label = Some "Calculate" }
-                let calculateAndReturn =
-                    Formlet.Never()
-                return!
-                    calculateAndReturn
+                        { Enhance.FormButtonConfiguration.Default with Label = Some "Calculate price" }
+                return! buyFormlet policyData (CalculatePremium policyData)
             }
             |> Enhance.WithFormContainer
+
+    module PolicyListWidget =
+        open DataAccess
+        open IntelliFactory.Html.Tags
+
+        let Render (dataSource:Policy array) =
+            let row (policy:Policy) =
+                 TR [ 
+                    TD [Text policy.number] 
+                 ]
+            Table (Array.map row dataSource)
 
 type LoginControl(redirectUrl: string) =
     inherit IntelliFactory.WebSharper.Web.Control()
@@ -195,8 +241,8 @@ type RegisterControl() =
     [<JavaScript>]
     override this.Body = Widgets.RegisterWidget.Create :> _
 
-type PolicyControl() =
+type PolicyControl(redirectUrl: string) =
     inherit IntelliFactory.WebSharper.Web.Control()
 
     [<JavaScript>]
-    override this.Body = Widgets.PolicyWidget.Create :> _
+    override this.Body = Widgets.PolicyWidget.Create redirectUrl :> _

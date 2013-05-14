@@ -9,12 +9,13 @@ module Site =
     let NewPolicyPage = 
         Layout.WithTemplate "New policy" NewPolicy <| fun ctx ->
             [ 
-                Div [ new PolicyControl() ]
+                Div [ new PolicyControl(ctx.Link Actions.PolicyList |> Layout.RandomizeUrl) ]
             ]
 
     let PolicyListPage =
         Layout.WithTemplate "Policy list" PolicyList <| fun ctx ->
-            [Text "Policy list"]
+            let adapter = new DataAccess.DataAdapter();
+            [ Widgets.PolicyListWidget.Render (adapter.FindClientPolicies(Users.CurrentUser().Value.id)) ]
 
     let HomePage =
         Layout.WithTemplate "Home" Home <| fun ctx ->
