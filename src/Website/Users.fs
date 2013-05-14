@@ -4,7 +4,7 @@ module Users =
     open WebMatrix.WebData
     open System.Collections.Generic
     open System.Linq
-    open Website.DataModel
+    open DataAccess
 
     type LoginData = {
         Name : string
@@ -33,15 +33,16 @@ module Users =
     let private createUser data =
         let usr = 
             new Client(
-                Login = data.Name, 
-                FirstName = data.firstName, 
-                LastName = data.lastName,
-                Code = data.idCode,
-                BirthDate = data.birthDate)
-        use db = new DatabaseContext()
-        db.Client.Add(usr) |> ignore
-        db.SaveChanges() 
-            |> fun rows -> if rows = 1 then Some(usr) else None
+                login = data.Name, 
+                first_name = data.firstName, 
+                last_name = data.lastName,
+                code = data.idCode,
+                birth_date = data.birthDate)
+        let dataAdapter = new DataAdapter();
+        dataAdapter.SaveClient(usr)
+            |> function
+                | true ->  Some(usr) 
+                | _ -> None
 
     let private createUserAccount userName pwd =
         WebSecurity.CreateAccount(userName, pwd)
@@ -49,7 +50,7 @@ module Users =
     let Register (data : ClientData) =
         let usr = createUser data
         if usr.IsSome
-            then createUserAccount usr.Value.Login data.Password |> fun _ -> true
+            then createUserAccount usr.Value.login data.Password |> fun _ -> true
             else false
 
     let Authenticate userName =
@@ -59,6 +60,6 @@ module Users =
 
     let CurrentUser() =
         if WebSecurity.IsAuthenticated then
-            use db = new DatabaseContext()
-            Some (db.Client.Find(WebSecurity.CurrentUserId))
+            let a = new DataAdapter();
+            Some (a.FindClient(WebSecurity.CurrentUserId))
         else None

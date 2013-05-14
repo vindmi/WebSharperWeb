@@ -145,14 +145,8 @@ module Widgets =
             isBurglaryAlarm : int
         }
 
-        let private policyHolderSummary =
-            match Users.CurrentUser() with
-            | Some(c) -> c.LastName + " " + c.FirstName + ", " + c.Code
-            | _ -> ""
-
         [<JavaScript>]
         let Create : Formlet<unit> =
-            //let policyHolder = [ Span [ Text policyHolderSummary ] ]
             let constructionType = Controls.Select 0 [ ("Stone / Brick", 0); ("Wood", 1) ] |> Enhance.WithTextLabel "Construction type"
             let constructionYear =  input "Construction year" (Some "Enter construction year")
             let area = input "Area (m2)" (Some "Enter area")

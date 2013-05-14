@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="InsuranceSystemModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="InsuranceSystemModelStoreContainer">
+          <EntitySet Name="Client" EntityType="InsuranceSystemModel.Store.Client" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="InsuredObject" EntityType="InsuranceSystemModel.Store.InsuredObject" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Policy" EntityType="InsuranceSystemModel.Store.Policy" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_InsuredObject_Policy" Association="InsuranceSystemModel.Store.FK_InsuredObject_Policy">
+            <End Role="Policy" EntitySet="Policy" />
+            <End Role="InsuredObject" EntitySet="InsuredObject" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Policy_Client" Association="InsuranceSystemModel.Store.FK_Policy_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Policy" EntitySet="Policy" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="code" Type="char" Nullable="false" MaxLength="11" />
+          <Property Name="first_name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="last_name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="birth_date" Type="date" Nullable="false" />
+          <Property Name="login" Type="nvarchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="InsuredObject">
+          <Key>
+            <PropertyRef Name="policy_id" />
+          </Key>
+          <Property Name="policy_id" Type="bigint" Nullable="false" />
+          <Property Name="construction_type" Type="tinyint" Nullable="false" />
+          <Property Name="area" Type="smallint" Nullable="false" />
+          <Property Name="object_type" Type="tinyint" Nullable="false" />
+          <Property Name="is_fire_alarm" Type="bit" Nullable="false" />
+          <Property Name="is_burglary_alarm" Type="bit" Nullable="false" />
+          <Property Name="construction_year" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Policy">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="number" Type="char" Nullable="false" MaxLength="8" />
+          <Property Name="valid_from" Type="datetime" Nullable="false" />
+          <Property Name="valid_tille" Type="datetime" Nullable="false" />
+          <Property Name="created_at" Type="datetime" Nullable="false" />
+          <Property Name="status" Type="tinyint" Nullable="false" />
+          <Property Name="premium" Type="money" />
+          <Property Name="holder_id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_InsuredObject_Policy">
+          <End Role="Policy" Type="InsuranceSystemModel.Store.Policy" Multiplicity="1" />
+          <End Role="InsuredObject" Type="InsuranceSystemModel.Store.InsuredObject" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Policy">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="InsuredObject">
+              <PropertyRef Name="policy_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Policy_Client">
+          <End Role="Client" Type="InsuranceSystemModel.Store.Client" Multiplicity="1" />
+          <End Role="Policy" Type="InsuranceSystemModel.Store.Policy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Policy">
+              <PropertyRef Name="holder_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="InsuranceSystemModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="DataContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Client" EntityType="InsuranceSystemModel.Client" />
+          <EntitySet Name="InsuredObject" EntityType="InsuranceSystemModel.InsuredObject" />
+          <EntitySet Name="Policy" EntityType="InsuranceSystemModel.Policy" />
+          <AssociationSet Name="FK_Policy_Client" Association="InsuranceSystemModel.FK_Policy_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Policy" EntitySet="Policy" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InsuredObject_Policy" Association="InsuranceSystemModel.FK_InsuredObject_Policy">
+            <End Role="Policy" EntitySet="Policy" />
+            <End Role="InsuredObject" EntitySet="InsuredObject" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="code" Type="String" Nullable="false" MaxLength="11" Unicode="false" FixedLength="true" />
+          <Property Name="first_name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="last_name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="birth_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="login" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Policy" Relationship="InsuranceSystemModel.FK_Policy_Client" FromRole="Client" ToRole="Policy" />
+        </EntityType>
+        <EntityType Name="InsuredObject">
+          <Key>
+            <PropertyRef Name="policy_id" />
+          </Key>
+          <Property Name="policy_id" Type="Int64" Nullable="false" />
+          <Property Name="construction_type" Type="Byte" Nullable="false" />
+          <Property Name="area" Type="Int16" Nullable="false" />
+          <Property Name="object_type" Type="Byte" Nullable="false" />
+          <Property Name="is_fire_alarm" Type="Boolean" Nullable="false" />
+          <Property Name="is_burglary_alarm" Type="Boolean" Nullable="false" />
+          <Property Name="construction_year" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="Policy" Relationship="InsuranceSystemModel.FK_InsuredObject_Policy" FromRole="InsuredObject" ToRole="Policy" />
+        </EntityType>
+        <EntityType Name="Policy">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="number" Type="String" Nullable="false" MaxLength="8" Unicode="false" FixedLength="true" />
+          <Property Name="valid_from" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="valid_tille" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="created_at" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="status" Type="Byte" Nullable="false" />
+          <Property Name="premium" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="holder_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Client" Relationship="InsuranceSystemModel.FK_Policy_Client" FromRole="Policy" ToRole="Client" />
+          <NavigationProperty Name="InsuredObject" Relationship="InsuranceSystemModel.FK_InsuredObject_Policy" FromRole="Policy" ToRole="InsuredObject" />
+        </EntityType>
+        <Association Name="FK_Policy_Client">
+          <End Role="Client" Type="InsuranceSystemModel.Client" Multiplicity="1" />
+          <End Role="Policy" Type="InsuranceSystemModel.Policy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Policy">
+              <PropertyRef Name="holder_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InsuredObject_Policy">
+          <End Role="Policy" Type="InsuranceSystemModel.Policy" Multiplicity="1" />
+          <End Role="InsuredObject" Type="InsuranceSystemModel.InsuredObject" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Policy">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="InsuredObject">
+              <PropertyRef Name="policy_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="InsuranceSystemModelStoreContainer" CdmEntityContainer="DataContext">
+          <EntitySetMapping Name="Client">
+            <EntityTypeMapping TypeName="InsuranceSystemModel.Client">
+              <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="birth_date" ColumnName="birth_date" />
+                <ScalarProperty Name="login" ColumnName="login" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InsuredObject">
+            <EntityTypeMapping TypeName="InsuranceSystemModel.InsuredObject">
+              <MappingFragment StoreEntitySet="InsuredObject">
+                <ScalarProperty Name="policy_id" ColumnName="policy_id" />
+                <ScalarProperty Name="construction_type" ColumnName="construction_type" />
+                <ScalarProperty Name="area" ColumnName="area" />
+                <ScalarProperty Name="object_type" ColumnName="object_type" />
+                <ScalarProperty Name="is_fire_alarm" ColumnName="is_fire_alarm" />
+                <ScalarProperty Name="is_burglary_alarm" ColumnName="is_burglary_alarm" />
+                <ScalarProperty Name="construction_year" ColumnName="construction_year" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Policy">
+            <EntityTypeMapping TypeName="InsuranceSystemModel.Policy">
+              <MappingFragment StoreEntitySet="Policy">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="number" ColumnName="number" />
+                <ScalarProperty Name="valid_from" ColumnName="valid_from" />
+                <ScalarProperty Name="valid_tille" ColumnName="valid_tille" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="premium" ColumnName="premium" />
+                <ScalarProperty Name="holder_id" ColumnName="holder_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
