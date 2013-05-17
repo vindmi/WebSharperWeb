@@ -196,6 +196,7 @@ module Widgets =
                 Formlet.Do {
                     let! prInp =
                         Controls.ReadOnlyInput (price.ToString())
+                        |> Enhance.WithTextLabel "Price"
                         |> Enhance.WithCustomSubmitButton
                             { Enhance.FormButtonConfiguration.Default with Label = Some "Buy" }
                         |> Enhance.WithFormContainer
@@ -219,14 +220,35 @@ module Widgets =
 
     module PolicyListWidget =
         open DataAccess
-        open IntelliFactory.Html.Tags
+        open IntelliFactory.Html
 
         let Render (dataSource:Policy array) =
+            let toNode e =
+                e :> Html.INode<Control>
+
             let row (policy:Policy) =
-                 TR [ 
-                    TD [Text policy.number] 
-                 ]
-            Table (Array.map row dataSource)
+                let policyPeriod =
+                    policy.valid_from.ToShortDateString() 
+                    + "-" 
+                    + policy.valid_tille.ToShortDateString()
+                TR [ 
+                    TD [Text policy.number]
+                    TD [Text policyPeriod]
+                    TD [Text (string policy.premium)]
+                ]
+
+            let rows = Array.map (row >> toNode) dataSource |> Seq.toList
+            let tableClass = Class "table" |> toNode
+            let header = 
+                THead [ 
+                    TR [
+                        TH [Text "Number"]
+                        TH [Text "Period"]
+                        TH [Text "Premium"] 
+                    ] 
+                ] |> toNode
+
+            Table (tableClass::(header::rows))
 
 type LoginControl(redirectUrl: string) =
     inherit IntelliFactory.WebSharper.Web.Control()

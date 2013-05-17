@@ -15,7 +15,7 @@ module Site =
     let PolicyListPage =
         Layout.WithTemplate "Policy list" PolicyList <| fun ctx ->
             let adapter = new DataAccess.DataAdapter();
-            [ Widgets.PolicyListWidget.Render (adapter.FindClientPolicies(Users.CurrentUser().Value.id)) ]
+            [ Div [ Widgets.PolicyListWidget.Render (adapter.FindClientPolicies(Users.CurrentUser().Value.id)) ]]
 
     let HomePage =
         Layout.WithTemplate "Home" Home <| fun ctx ->
